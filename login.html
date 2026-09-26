@@ -1,695 +1,504 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAX STORE - Login</title>
 
-  <title>Login — MAX STORE</title>
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
 
-  <link rel="stylesheet" href="/css/style.css">
+body{
+    min-height:100vh;
+    font-family:Arial,sans-serif;
+    background:
+        radial-gradient(circle at top,#101b3d 0%,#08090d 45%,#030408 100%);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
 
-  <style>
+.login-box{
+    width:100%;
+    max-width:430px;
+    padding:35px;
+    border-radius:24px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(20px);
+    box-shadow:0 25px 80px rgba(0,0,0,.5);
+}
 
-    .login-box {
-      max-width: 520px;
-      margin: 60px auto;
-    }
+.logo{
+    text-align:center;
+    margin-bottom:30px;
+}
 
-    .field {
-      margin-bottom: 18px;
-    }
+.logo h1{
+    font-size:34px;
+    letter-spacing:2px;
+}
 
-    .field label {
-      display: block;
-      margin-bottom: 7px;
-    }
+.logo p{
+    color:#9da5b8;
+    margin-top:8px;
+}
 
-    .password-wrap {
-      position: relative;
-    }
+label{
+    display:block;
+    margin:18px 0 8px;
+    color:#cdd2df;
+    font-size:14px;
+}
 
-    .password-wrap input {
-      width: 100%;
-      box-sizing: border-box;
-      padding-right: 80px;
-    }
+input{
+    width:100%;
+    padding:15px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,.13);
+    background:rgba(255,255,255,.06);
+    color:white;
+    outline:none;
+    font-size:15px;
+}
 
-    .show-password {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 0;
-      background: transparent;
-      color: #00d4ff;
-      cursor: pointer;
-      font-weight: 600;
-    }
+input:focus{
+    border-color:#397cff;
+    box-shadow:0 0 0 3px rgba(57,124,255,.12);
+}
 
-    .success {
-      color: #22c55e;
-      margin-top: 15px;
-    }
+.password-box{
+    position:relative;
+}
 
-    .error {
-      color: #ef4444;
-      margin-top: 15px;
-    }
+.password-box input{
+    padding-right:55px;
+}
 
-    .muted {
-      color: #a6a8b3;
-    }
+.show-password{
+    position:absolute;
+    right:14px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#9da5b8;
+    user-select:none;
+}
 
-  </style>
+button{
+    width:100%;
+    margin-top:25px;
+    padding:15px;
+    border:0;
+    border-radius:12px;
+    background:linear-gradient(135deg,#1d5cff,#1744c4);
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
 
+button:hover{
+    opacity:.9;
+}
+
+button:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+}
+
+.message{
+    margin-top:18px;
+    padding:12px;
+    border-radius:10px;
+    display:none;
+    font-size:14px;
+    text-align:center;
+}
+
+.error{
+    display:block;
+    background:rgba(255,60,60,.12);
+    border:1px solid rgba(255,60,60,.3);
+    color:#ff8585;
+}
+
+.success{
+    display:block;
+    background:rgba(40,200,120,.12);
+    border:1px solid rgba(40,200,120,.3);
+    color:#6ff0b0;
+}
+
+.register{
+    text-align:center;
+    margin-top:22px;
+    color:#9da5b8;
+    font-size:14px;
+}
+
+.register a{
+    color:#4d8cff;
+    text-decoration:none;
+    font-weight:bold;
+}
+</style>
 </head>
-
 
 <body>
 
+<div class="login-box">
 
-<nav class="nav">
-
-  <div class="navin">
-
-    <a class="logo" href="/index.html">
-      MAX <span>STORE</span>
-    </a>
-
-    <div class="navlinks">
-
-      <a href="/index.html">
-        Home
-      </a>
-
-      <a href="/products.html">
-        Products
-      </a>
-
-      <a href="/products.html?category=Fashion">
-        Fashion
-      </a>
-
-      <a href="/products.html?category=Electronics">
-        Electronics
-      </a>
-
-      <a href="/products.html?category=Photo%20%26%20Camera">
-        Photo & Camera
-      </a>
-
+    <div class="logo">
+        <h1>MAX STORE</h1>
+        <p>Welcome back</p>
     </div>
 
-    <a href="/cart.html" class="btn">
-      Cart
-    </a>
+    <form id="loginForm">
 
-    <a href="/register.html" class="btn primary">
-      Register
-    </a>
-
-  </div>
-
-</nav>
-
-
-
-<main class="container">
-
-  <div class="form panel login-box">
-
-    <h1>Login</h1>
-
-    <p class="muted">
-      Login to your MAX STORE account.
-    </p>
-
-
-    <!-- LOGIN TYPE -->
-
-    <div class="field">
-
-      <label for="role">
-        Login as
-      </label>
-
-      <select
-        id="role"
-        class="input"
-      >
-
-        <option value="buyer">
-          Buyer
-        </option>
-
-        <option value="seller">
-          Seller
-        </option>
-
-        <option value="buyer_seller">
-          Buyer & Seller
-        </option>
-
-        <option value="admin">
-          Admin
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <!-- EMAIL -->
-
-    <div class="field">
-
-      <label for="email">
-        Email
-      </label>
-
-      <input
-        id="email"
-        class="input"
-        type="email"
-        autocomplete="email"
-        placeholder="Enter your email"
-      >
-
-    </div>
-
-
-    <!-- PASSWORD -->
-
-    <div class="field">
-
-      <label for="password">
-        Password
-      </label>
-
-      <div class="password-wrap">
-
+        <label for="email">Email</label>
         <input
-          id="password"
-          class="input"
-          type="password"
-          autocomplete="current-password"
-          placeholder="Enter your password"
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+            autocomplete="email"
         >
 
-        <button
-          type="button"
-          class="show-password"
-          id="showPassword"
-        >
-          Show
+        <label for="password">Password</label>
+
+        <div class="password-box">
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                required
+                autocomplete="current-password"
+            >
+
+            <span
+                class="show-password"
+                id="showPassword"
+                onclick="togglePassword()"
+            >👁</span>
+        </div>
+
+        <button type="submit" id="loginBtn">
+            Login
         </button>
 
-      </div>
+    </form>
 
+    <div id="message" class="message"></div>
+
+    <div class="register">
+        Don't have an account?
+        <a href="register.html">Create Account</a>
     </div>
 
-
-    <!-- LOGIN BUTTON -->
-
-    <button
-      type="button"
-      class="btn primary"
-      id="loginBtn"
-    >
-      Login
-    </button>
-
-
-    <!-- MESSAGE -->
-
-    <p id="msg"></p>
-
-
-    <p class="muted">
-
-      New user?
-
-      <a href="/register.html">
-        Register
-      </a>
-
-    </p>
-
-  </div>
-
-</main>
-
+</div>
 
 
 <script>
 
-/* =====================================================
-   MAX STORE API
-===================================================== */
+/* =========================================
+   MAX STORE GOOGLE APPS SCRIPT API
+========================================= */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbwe_fBlSg8zIkNhCAyMfCI9r_fmnzLoKdALH-rYJd_2BO-lrLgV6h-J7ZgoGdLt2swp3Q/exec";
 
 
-/* =====================================================
+/* =========================================
    ELEMENTS
-===================================================== */
+========================================= */
 
-const roleInput =
-  document.getElementById("role");
-
-const emailInput =
-  document.getElementById("email");
-
-const passwordInput =
-  document.getElementById("password");
-
-const loginBtn =
-  document.getElementById("loginBtn");
-
-const msg =
-  document.getElementById("msg");
-
-const showPassword =
-  document.getElementById("showPassword");
+const form = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const loginBtn = document.getElementById("loginBtn");
+const message = document.getElementById("message");
 
 
-/* =====================================================
+/* =========================================
    SHOW / HIDE PASSWORD
-===================================================== */
+========================================= */
 
-showPassword.addEventListener(
-  "click",
-  function () {
+function togglePassword(){
 
-    if (
-      passwordInput.type === "password"
-    ) {
+    const type =
+        passwordInput.type === "password"
+        ? "text"
+        : "password";
 
-      passwordInput.type = "text";
+    passwordInput.type = type;
 
-      showPassword.textContent = "Hide";
-
-    } else {
-
-      passwordInput.type = "password";
-
-      showPassword.textContent = "Show";
-
-    }
-
-  }
-);
+}
 
 
-/* =====================================================
-   ENTER KEY LOGIN
-===================================================== */
+/* =========================================
+   MESSAGE
+========================================= */
 
-emailInput.addEventListener(
-  "keydown",
-  function (event) {
+function showMessage(text,type="error"){
 
-    if (event.key === "Enter") {
-      login();
-    }
+    message.textContent = text;
 
-  }
-);
+    message.className =
+        "message " + type;
+
+}
 
 
-passwordInput.addEventListener(
-  "keydown",
-  function (event) {
-
-    if (event.key === "Enter") {
-      login();
-    }
-
-  }
-);
-
-
-/* =====================================================
-   LOGIN BUTTON
-===================================================== */
-
-loginBtn.addEventListener(
-  "click",
-  login
-);
-
-
-/* =====================================================
+/* =========================================
    LOGIN
-===================================================== */
+========================================= */
 
-async function login() {
+form.addEventListener("submit", async function(e){
 
-  clearMessage();
+    e.preventDefault();
 
+    const email =
+        emailInput.value.trim().toLowerCase();
 
-  const email =
-    emailInput.value
-      .trim()
-      .toLowerCase();
+    const password =
+        passwordInput.value;
 
+    if(!email || !password){
 
-  const password =
-    passwordInput.value;
+        showMessage(
+            "Please enter email and password.",
+            "error"
+        );
 
-
-  const loginRole =
-    roleInput.value;
-
-
-  /* VALIDATION */
-
-  if (!email) {
-
-    showError(
-      "Please enter your email."
-    );
-
-    return;
-
-  }
+        return;
+    }
 
 
-  if (!password) {
-
-    showError(
-      "Please enter your password."
-    );
-
-    return;
-
-  }
+    loginBtn.disabled = true;
+    loginBtn.textContent = "Logging in...";
 
 
-  /* BUTTON */
+    try{
 
-  loginBtn.disabled = true;
+        const response = await fetch(API_URL,{
 
-  loginBtn.textContent =
-    "Logging in...";
+            method:"POST",
+
+            headers:{
+                "Content-Type":
+                "text/plain;charset=utf-8"
+            },
+
+            body:JSON.stringify({
+
+                action:"login",
+
+                email:email,
+
+                password:password
+
+            })
+
+        });
 
 
-  try {
+        if(!response.ok){
 
-    console.log(
-      "MAX STORE LOGIN REQUEST",
-      {
-        email: email,
-        loginRole: loginRole
-      }
-    );
-
-
-    /* SEND TO GOOGLE APPS SCRIPT */
-
-    const response =
-      await fetch(
-        API_URL,
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-              "text/plain;charset=utf-8"
-          },
-
-          body: JSON.stringify({
-
-            action: "login",
-
-            email: email,
-
-            password: password,
-
-            loginRole: loginRole
-
-          })
+            throw new Error(
+                "HTTP " + response.status
+            );
 
         }
-      );
 
 
-    /* CHECK HTTP */
+        const result =
+            await response.json();
 
-    if (!response.ok) {
 
-      throw new Error(
-        "Server error: HTTP " +
-        response.status
-      );
+        console.log("LOGIN RESPONSE:",result);
+
+
+        if(!result.success){
+
+            throw new Error(
+                result.error ||
+                result.message ||
+                "Invalid email or password"
+            );
+
+        }
+
+
+        /* =================================
+           USER DATA
+        ================================= */
+
+        const user = result.user;
+
+        if(!user){
+
+            throw new Error(
+                "Login successful but user data is missing."
+            );
+
+        }
+
+
+        const role =
+            String(user.role || "")
+            .toLowerCase()
+            .trim();
+
+
+        /* =================================
+           SAVE SESSION
+        ================================= */
+
+        localStorage.setItem(
+            "maxstoreSession",
+            JSON.stringify(user)
+        );
+
+
+        localStorage.setItem(
+            "MAXSTORE_USER",
+            JSON.stringify(user)
+        );
+
+
+        localStorage.setItem(
+            "MAXSTORE_ROLE",
+            role
+        );
+
+
+        showMessage(
+            "Login successful. Redirecting...",
+            "success"
+        );
+
+
+        /* =================================
+           AUTOMATIC ROLE REDIRECT
+        ================================= */
+
+        setTimeout(function(){
+
+            /* ADMIN */
+
+            if(role === "admin"){
+
+                window.location.href =
+                    "admin/dashboard.html";
+
+                return;
+            }
+
+
+            /* SELLER */
+
+            if(role === "seller"){
+
+                window.location.href =
+                    "seller/dashboard.html";
+
+                return;
+            }
+
+
+            /* BUYER + SELLER */
+
+            if(
+                role === "both" ||
+                role === "buyer_seller"
+            ){
+
+                /*
+                   Buyer & Seller account.
+                   Open buyer dashboard first.
+                   Seller dashboard can also be
+                   accessed from the account.
+                */
+
+                window.location.href =
+                    "buyer/dashboard.html";
+
+                return;
+            }
+
+
+            /* BUYER */
+
+            if(role === "buyer"){
+
+                window.location.href =
+                    "buyer/dashboard.html";
+
+                return;
+            }
+
+
+            /* UNKNOWN ROLE */
+
+            showMessage(
+                "Unknown account role: " + role,
+                "error"
+            );
+
+            loginBtn.disabled = false;
+            loginBtn.textContent = "Login";
+
+        },700);
+
+
+    }catch(error){
+
+        console.error(
+            "LOGIN ERROR:",
+            error
+        );
+
+
+        showMessage(
+            "Login failed: " +
+            error.message,
+            "error"
+        );
+
+
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Login";
 
     }
 
-
-    /* READ JSON */
-
-    const result =
-      await response.json();
+});
 
 
-    console.log(
-      "MAX STORE LOGIN RESPONSE:",
-      result
-    );
+/* =========================================
+   ENTER KEY
+========================================= */
 
+passwordInput.addEventListener(
+    "keydown",
+    function(e){
 
-    /* BACKEND ERROR */
+        if(e.key === "Enter"){
 
-    if (
-      !result ||
-      result.success !== true
-    ) {
+            form.requestSubmit();
 
-      throw new Error(
-
-        result.error ||
-
-        result.message ||
-
-        "Invalid email or password"
-
-      );
+        }
 
     }
-
-
-    /* USER */
-
-    const user =
-      result.user;
-
-
-    if (!user) {
-
-      throw new Error(
-        "User information was not returned."
-      );
-
-    }
-
-
-    const actualRole =
-      String(
-        user.role || ""
-      )
-      .toLowerCase();
-
-
-    /* =================================================
-       SAVE SESSION
-    ================================================= */
-
-    localStorage.setItem(
-      "maxstoreSession",
-      JSON.stringify(user)
-    );
-
-
-    /* =================================================
-       ADMIN
-    ================================================= */
-
-    if (
-      actualRole === "admin"
-    ) {
-
-      showSuccess(
-        "Admin login successful. Opening dashboard..."
-      );
-
-      setTimeout(
-        function () {
-
-          window.location.href =
-            "/admin/dashboard.html";
-
-        },
-        500
-      );
-
-      return;
-
-    }
-
-
-    /* =================================================
-       SELLER
-    ================================================= */
-
-    if (
-      actualRole === "seller"
-    ) {
-
-      showSuccess(
-        "Seller login successful. Opening dashboard..."
-      );
-
-      setTimeout(
-        function () {
-
-          window.location.href =
-            "/seller/dashboard.html";
-
-        },
-        500
-      );
-
-      return;
-
-    }
-
-
-    /* =================================================
-       BUYER + SELLER
-    ================================================= */
-
-    if (
-      actualRole === "buyer_seller"
-    ) {
-
-      showSuccess(
-        "Login successful. Opening seller dashboard..."
-      );
-
-      setTimeout(
-        function () {
-
-          window.location.href =
-            "/seller/dashboard.html";
-
-        },
-        500
-      );
-
-      return;
-
-    }
-
-
-    /* =================================================
-       BUYER
-    ================================================= */
-
-    if (
-      actualRole === "buyer"
-    ) {
-
-      showSuccess(
-        "Login successful. Opening MAX STORE..."
-      );
-
-      setTimeout(
-        function () {
-
-          window.location.href =
-            "/index.html";
-
-        },
-        500
-      );
-
-      return;
-
-    }
-
-
-    throw new Error(
-      "Unknown account role: " +
-      actualRole
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "MAX STORE LOGIN ERROR:",
-      error
-    );
-
-
-    showError(
-      error.message ||
-      "Login failed."
-    );
-
-
-    loginBtn.disabled = false;
-
-    loginBtn.textContent =
-      "Login";
-
-  }
-
-}
-
-
-/* =====================================================
-   ERROR
-===================================================== */
-
-function showError(message) {
-
-  msg.className = "error";
-
-  msg.textContent = message;
-
-}
-
-
-/* =====================================================
-   SUCCESS
-===================================================== */
-
-function showSuccess(message) {
-
-  msg.className = "success";
-
-  msg.textContent = message;
-
-}
-
-
-/* =====================================================
-   CLEAR
-===================================================== */
-
-function clearMessage() {
-
-  msg.className = "";
-
-  msg.textContent = "";
-
-}
+);
 
 </script>
-
 
 </body>
 </html>
