@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,6 +7,58 @@
   <title>Register — MAX STORE</title>
 
   <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+    .register-box {
+      max-width: 520px;
+      margin: 50px auto;
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      width: 100%;
+      box-sizing: border-box;
+      padding-right: 90px;
+    }
+
+    .show-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: #00d4ff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .success {
+      color: #22c55e;
+      margin-top: 15px;
+    }
+
+    .error {
+      color: #ef4444;
+      margin-top: 15px;
+    }
+
+    .muted {
+      color: #a6a8b3;
+    }
+  </style>
 </head>
 
 <body>
@@ -43,12 +94,12 @@
 
 <main class="container">
 
-  <div class="form panel">
+  <div class="form panel register-box">
 
     <h1>Create Account</h1>
 
     <p class="muted">
-      Join MAX STORE as a buyer or seller.
+      Create your MAX STORE account.
     </p>
 
 
@@ -91,8 +142,8 @@
         class="input"
         id="name"
         type="text"
-        placeholder="Enter your name"
-        required
+        autocomplete="name"
+        placeholder="Enter your full name"
       >
 
     </div>
@@ -110,8 +161,8 @@
         class="input"
         id="email"
         type="email"
+        autocomplete="email"
         placeholder="Enter your email"
-        required
       >
 
     </div>
@@ -122,26 +173,23 @@
     <div class="field">
 
       <label for="phone">
-        Phone
+        Phone Number
       </label>
 
       <input
         class="input"
         id="phone"
         type="tel"
+        autocomplete="tel"
         placeholder="07XXXXXXXX"
-        required
       >
 
     </div>
 
 
-    <!-- STORE -->
+    <!-- STORE NAME -->
 
-    <div
-      class="field"
-      id="storeField"
-    >
+    <div class="field" id="storeBox">
 
       <label for="store">
         Store Name
@@ -151,11 +199,12 @@
         class="input"
         id="store"
         type="text"
+        autocomplete="organization"
         placeholder="Enter your store name"
       >
 
       <small class="muted">
-        Required for Seller / Buyer & Seller accounts.
+        Required for Seller and Buyer & Seller.
       </small>
 
     </div>
@@ -169,13 +218,25 @@
         Password
       </label>
 
-      <input
-        class="input"
-        id="password"
-        type="password"
-        placeholder="Create a password"
-        required
-      >
+      <div class="password-wrap">
+
+        <input
+          class="input"
+          id="password"
+          type="password"
+          autocomplete="new-password"
+          placeholder="Enter password"
+        >
+
+        <button
+          type="button"
+          class="show-password"
+          id="showPassword"
+        >
+          Show
+        </button>
+
+      </div>
 
     </div>
 
@@ -188,23 +249,35 @@
         Confirm Password
       </label>
 
-      <input
-        class="input"
-        id="confirmPassword"
-        type="password"
-        placeholder="Confirm your password"
-        required
-      >
+      <div class="password-wrap">
+
+        <input
+          class="input"
+          id="confirmPassword"
+          type="password"
+          autocomplete="new-password"
+          placeholder="Re-enter password"
+        >
+
+        <button
+          type="button"
+          class="show-password"
+          id="showConfirmPassword"
+        >
+          Show
+        </button>
+
+      </div>
 
     </div>
 
 
-    <!-- BUTTON -->
+    <!-- REGISTER BUTTON -->
 
     <button
+      type="button"
       class="btn primary"
       id="registerBtn"
-      type="button"
     >
       Create Account
     </button>
@@ -235,14 +308,12 @@
 
 <script>
 
-const roleInput =
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const role =
   document.getElementById("role");
-
-const storeField =
-  document.getElementById("storeField");
-
-const storeInput =
-  document.getElementById("store");
 
 const nameInput =
   document.getElementById("name");
@@ -252,6 +323,12 @@ const emailInput =
 
 const phoneInput =
   document.getElementById("phone");
+
+const storeInput =
+  document.getElementById("store");
+
+const storeBox =
+  document.getElementById("storeBox");
 
 const passwordInput =
   document.getElementById("password");
@@ -265,236 +342,355 @@ const registerBtn =
 const msg =
   document.getElementById("msg");
 
+const showPassword =
+  document.getElementById("showPassword");
 
-/* ==========================================
-   SHOW / HIDE STORE FIELD
-========================================== */
+const showConfirmPassword =
+  document.getElementById("showConfirmPassword");
 
-function updateStoreField() {
 
-  if (roleInput.value === "buyer") {
+/* =========================================
+   SHOW / HIDE PASSWORD
+========================================= */
 
-    storeField.style.display = "none";
+showPassword.addEventListener("click", function () {
+
+  if (passwordInput.type === "password") {
+
+    passwordInput.type = "text";
+
+    showPassword.textContent = "Hide";
+
+  } else {
+
+    passwordInput.type = "password";
+
+    showPassword.textContent = "Show";
+
+  }
+
+});
+
+
+showConfirmPassword.addEventListener("click", function () {
+
+  if (confirmPasswordInput.type === "password") {
+
+    confirmPasswordInput.type = "text";
+
+    showConfirmPassword.textContent = "Hide";
+
+  } else {
+
+    confirmPasswordInput.type = "password";
+
+    showConfirmPassword.textContent = "Show";
+
+  }
+
+});
+
+
+/* =========================================
+   SELLER FIELD
+========================================= */
+
+function updateSellerField() {
+
+  if (role.value === "buyer") {
+
+    storeBox.style.display = "none";
 
     storeInput.value = "";
 
   } else {
 
-    storeField.style.display = "block";
+    storeBox.style.display = "block";
 
   }
 
 }
 
 
-roleInput.addEventListener(
+role.addEventListener(
   "change",
-  updateStoreField
+  updateSellerField
 );
 
-updateStoreField();
+updateSellerField();
 
 
-/* ==========================================
+/* =========================================
    REGISTER
-========================================== */
+========================================= */
 
 registerBtn.addEventListener(
   "click",
-  async function () {
-
-    msg.textContent = "";
-    msg.className = "";
-
-    const name =
-      nameInput.value.trim();
-
-    const email =
-      emailInput.value.trim();
-
-    const phone =
-      phoneInput.value.trim();
-
-    const password =
-      passwordInput.value;
-
-    const confirmPassword =
-      confirmPasswordInput.value;
-
-    const role =
-      roleInput.value;
-
-    const storeName =
-      storeInput.value.trim();
+  registerAccount
+);
 
 
-    /* VALIDATION */
+async function registerAccount() {
 
-    if (!name) {
-
-      showError("Please enter your name.");
-
-      return;
-
-    }
+  clearMessage();
 
 
-    if (!email) {
+  const name =
+    nameInput.value.trim();
 
-      showError("Please enter your email.");
+  const email =
+    emailInput.value.trim().toLowerCase();
 
-      return;
+  const phone =
+    phoneInput.value.trim();
 
-    }
+  const storeName =
+    storeInput.value.trim();
 
+  const password =
+    passwordInput.value;
 
-    if (!phone) {
+  const confirmPassword =
+    confirmPasswordInput.value;
 
-      showError("Please enter your phone number.");
-
-      return;
-
-    }
-
-
-    if (!password) {
-
-      showError("Please enter a password.");
-
-      return;
-
-    }
+  const accountRole =
+    role.value;
 
 
-    if (password.length < 6) {
+  /* ==============================
+     VALIDATION
+  ============================== */
 
-      showError(
-        "Password must be at least 6 characters."
-      );
+  if (!name) {
 
-      return;
+    showError(
+      "Please enter your name."
+    );
 
-    }
+    return;
+
+  }
 
 
-    if (password !== confirmPassword) {
+  if (!email) {
+
+    showError(
+      "Please enter your email."
+    );
+
+    return;
+
+  }
+
+
+  if (!phone) {
+
+    showError(
+      "Please enter your phone number."
+    );
+
+    return;
+
+  }
+
+
+  if (
+    accountRole === "seller" ||
+    accountRole === "buyer_seller"
+  ) {
+
+    if (!storeName) {
 
       showError(
-        "Passwords do not match."
+        "Please enter your store name."
       );
 
       return;
-
-    }
-
-
-    /* SELLER VALIDATION */
-
-    if (
-      role === "seller" ||
-      role === "buyer_seller"
-    ) {
-
-      if (!storeName) {
-
-        showError(
-          "Please enter your store name."
-        );
-
-        return;
-
-      }
-
-    }
-
-
-    /* BUTTON */
-
-    registerBtn.disabled = true;
-
-    registerBtn.textContent =
-      "Creating Account...";
-
-
-    try {
-
-      const result = await api(
-        "register",
-        {
-
-          name: name,
-
-          email: email,
-
-          phone: phone,
-
-          password: password,
-
-          role: role,
-
-          storeName: storeName
-
-        }
-      );
-
-
-      if (
-        !result ||
-        result.success !== true
-      ) {
-
-        throw new Error(
-          result?.message ||
-          "Registration failed."
-        );
-
-      }
-
-
-      msg.className =
-        "success";
-
-      msg.textContent =
-        "Account created successfully! Redirecting to login...";
-
-
-      setTimeout(
-        function () {
-
-          window.location.href =
-            "/login.html";
-
-        },
-        1200
-      );
-
-
-    } catch (error) {
-
-      showError(
-        error.message ||
-        "Something went wrong."
-      );
-
-      registerBtn.disabled = false;
-
-      registerBtn.textContent =
-        "Create Account";
 
     }
 
   }
-);
 
 
-/* ==========================================
-   ERROR
-========================================== */
+  if (!password) {
+
+    showError(
+      "Please enter a password."
+    );
+
+    return;
+
+  }
+
+
+  if (password.length < 6) {
+
+    showError(
+      "Password must contain at least 6 characters."
+    );
+
+    return;
+
+  }
+
+
+  if (!confirmPassword) {
+
+    showError(
+      "Please confirm your password."
+    );
+
+    return;
+
+  }
+
+
+  if (password !== confirmPassword) {
+
+    showError(
+      "Passwords do not match."
+    );
+
+    return;
+
+  }
+
+
+  /* ==============================
+     DISABLE BUTTON
+  ============================== */
+
+  registerBtn.disabled = true;
+
+  registerBtn.textContent =
+    "Creating Account...";
+
+
+  try {
+
+
+    /* ==============================
+       SEND TO GOOGLE APPS SCRIPT
+    ============================== */
+
+    const result = await api(
+      "register",
+      {
+
+        name: name,
+
+        email: email,
+
+        phone: phone,
+
+        password: password,
+
+        role: accountRole,
+
+        storeName: storeName
+
+      }
+    );
+
+
+    console.log(
+      "Registration response:",
+      result
+    );
+
+
+    /* ==============================
+       CHECK RESPONSE
+    ============================== */
+
+    if (
+      !result ||
+      result.success !== true
+    ) {
+
+      throw new Error(
+        result &&
+        result.message
+          ? result.message
+          : "Registration failed."
+      );
+
+    }
+
+
+    /* ==============================
+       SUCCESS
+    ============================== */
+
+    showSuccess(
+      "Account created successfully! Redirecting to Login..."
+    );
+
+
+    registerBtn.textContent =
+      "Account Created";
+
+
+    setTimeout(function () {
+
+      window.location.href =
+        "/login.html";
+
+    }, 1500);
+
+
+  } catch (error) {
+
+    console.error(
+      "Registration Error:",
+      error
+    );
+
+
+    showError(
+      error.message ||
+      "Unable to create account."
+    );
+
+
+    registerBtn.disabled = false;
+
+    registerBtn.textContent =
+      "Create Account";
+
+  }
+
+}
+
+
+/* =========================================
+   MESSAGE FUNCTIONS
+========================================= */
+
+function clearMessage() {
+
+  msg.textContent = "";
+
+  msg.className = "";
+
+}
+
 
 function showError(message) {
 
   msg.className =
     "error";
+
+  msg.textContent =
+    message;
+
+}
+
+
+function showSuccess(message) {
+
+  msg.className =
+    "success";
 
   msg.textContent =
     message;
