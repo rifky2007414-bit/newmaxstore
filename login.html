@@ -62,6 +62,7 @@
     }
 
   </style>
+
 </head>
 
 
@@ -116,21 +117,16 @@
 
 <main class="container">
 
-
   <div class="form panel login-box">
 
-
-    <h1>
-      Login
-    </h1>
-
+    <h1>Login</h1>
 
     <p class="muted">
       Login to your MAX STORE account.
     </p>
 
 
-    <!-- ACCOUNT TYPE -->
+    <!-- LOGIN TYPE -->
 
     <div class="field">
 
@@ -164,7 +160,6 @@
     </div>
 
 
-
     <!-- EMAIL -->
 
     <div class="field">
@@ -182,7 +177,6 @@
       >
 
     </div>
-
 
 
     <!-- PASSWORD -->
@@ -216,7 +210,6 @@
     </div>
 
 
-
     <!-- LOGIN BUTTON -->
 
     <button
@@ -228,11 +221,9 @@
     </button>
 
 
-
     <!-- MESSAGE -->
 
     <p id="msg"></p>
-
 
 
     <p class="muted">
@@ -245,9 +236,7 @@
 
     </p>
 
-
   </div>
-
 
 </main>
 
@@ -255,47 +244,44 @@
 
 <script>
 
-
-/* ==========================================
-   MAX STORE GOOGLE APPS SCRIPT API
-========================================== */
+/* =====================================================
+   MAX STORE API
+===================================================== */
 
 const API_URL =
 "https://script.google.com/macros/s/AKfycbwe_fBlSg8zIkNhCAyMfCI9r_fmnzLoKdALH-rYJd_2BO-lrLgV6h-J7ZgoGdLt2swp3Q/exec";
 
 
-
-/* ==========================================
+/* =====================================================
    ELEMENTS
-========================================== */
+===================================================== */
 
 const roleInput =
-document.getElementById("role");
+  document.getElementById("role");
 
 const emailInput =
-document.getElementById("email");
+  document.getElementById("email");
 
 const passwordInput =
-document.getElementById("password");
+  document.getElementById("password");
 
 const loginBtn =
-document.getElementById("loginBtn");
+  document.getElementById("loginBtn");
 
 const msg =
-document.getElementById("msg");
+  document.getElementById("msg");
 
 const showPassword =
-document.getElementById("showPassword");
+  document.getElementById("showPassword");
 
 
-
-/* ==========================================
+/* =====================================================
    SHOW / HIDE PASSWORD
-========================================== */
+===================================================== */
 
 showPassword.addEventListener(
   "click",
-  function() {
+  function () {
 
     if (
       passwordInput.type === "password"
@@ -303,16 +289,13 @@ showPassword.addEventListener(
 
       passwordInput.type = "text";
 
-      showPassword.textContent =
-        "Hide";
+      showPassword.textContent = "Hide";
 
     } else {
 
-      passwordInput.type =
-        "password";
+      passwordInput.type = "password";
 
-      showPassword.textContent =
-        "Show";
+      showPassword.textContent = "Show";
 
     }
 
@@ -320,10 +303,37 @@ showPassword.addEventListener(
 );
 
 
+/* =====================================================
+   ENTER KEY LOGIN
+===================================================== */
 
-/* ==========================================
+emailInput.addEventListener(
+  "keydown",
+  function (event) {
+
+    if (event.key === "Enter") {
+      login();
+    }
+
+  }
+);
+
+
+passwordInput.addEventListener(
+  "keydown",
+  function (event) {
+
+    if (event.key === "Enter") {
+      login();
+    }
+
+  }
+);
+
+
+/* =====================================================
    LOGIN BUTTON
-========================================== */
+===================================================== */
 
 loginBtn.addEventListener(
   "click",
@@ -331,33 +341,30 @@ loginBtn.addEventListener(
 );
 
 
-
-/* ==========================================
-   LOGIN FUNCTION
-========================================== */
+/* =====================================================
+   LOGIN
+===================================================== */
 
 async function login() {
 
-
-  msg.textContent = "";
-
-  msg.className = "";
+  clearMessage();
 
 
   const email =
-    emailInput.value.trim().toLowerCase();
+    emailInput.value
+      .trim()
+      .toLowerCase();
+
 
   const password =
     passwordInput.value;
 
-  const selectedRole =
+
+  const loginRole =
     roleInput.value;
 
 
-
-  /* ========================================
-     VALIDATION
-  ======================================== */
+  /* VALIDATION */
 
   if (!email) {
 
@@ -381,10 +388,7 @@ async function login() {
   }
 
 
-
-  /* ========================================
-     BUTTON
-  ======================================== */
+  /* BUTTON */
 
   loginBtn.disabled = true;
 
@@ -392,19 +396,23 @@ async function login() {
     "Logging in...";
 
 
-
   try {
 
+    console.log(
+      "MAX STORE LOGIN REQUEST",
+      {
+        email: email,
+        loginRole: loginRole
+      }
+    );
 
-    /* ======================================
-       SEND LOGIN REQUEST
-    ====================================== */
+
+    /* SEND TO GOOGLE APPS SCRIPT */
 
     const response =
       await fetch(
         API_URL,
         {
-
           method: "POST",
 
           headers: {
@@ -418,7 +426,9 @@ async function login() {
 
             email: email,
 
-            password: password
+            password: password,
+
+            loginRole: loginRole
 
           })
 
@@ -426,22 +436,31 @@ async function login() {
       );
 
 
+    /* CHECK HTTP */
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Server error: HTTP " +
+        response.status
+      );
+
+    }
+
+
+    /* READ JSON */
 
     const result =
       await response.json();
 
 
-
     console.log(
-      "MAX STORE LOGIN:",
+      "MAX STORE LOGIN RESPONSE:",
       result
     );
 
 
-
-    /* ======================================
-       LOGIN FAILED
-    ====================================== */
+    /* BACKEND ERROR */
 
     if (
       !result ||
@@ -449,148 +468,179 @@ async function login() {
     ) {
 
       throw new Error(
-        result?.message ||
+
+        result.error ||
+
+        result.message ||
+
         "Invalid email or password"
+
       );
 
     }
 
 
-
-    /* ======================================
-       USER DATA
-    ====================================== */
+    /* USER */
 
     const user =
       result.user;
 
 
-
     if (!user) {
 
       throw new Error(
-        "User data was not returned."
+        "User information was not returned."
       );
 
     }
 
 
-
-    /* ======================================
-       ROLE CHECK
-    ====================================== */
-
     const actualRole =
       String(
         user.role || ""
-      ).toLowerCase();
+      )
+      .toLowerCase();
 
 
+    /* =================================================
+       SAVE SESSION
+    ================================================= */
 
-    /* ADMIN */
+    localStorage.setItem(
+      "maxstoreSession",
+      JSON.stringify(user)
+    );
+
+
+    /* =================================================
+       ADMIN
+    ================================================= */
 
     if (
       actualRole === "admin"
     ) {
 
-      localStorage.setItem(
-        "maxstoreSession",
-        JSON.stringify(user)
+      showSuccess(
+        "Admin login successful. Opening dashboard..."
       );
 
-      window.location.href =
-        "/admin/dashboard.html";
+      setTimeout(
+        function () {
+
+          window.location.href =
+            "/admin/dashboard.html";
+
+        },
+        500
+      );
 
       return;
 
     }
 
 
-
-    /* SELLER */
+    /* =================================================
+       SELLER
+    ================================================= */
 
     if (
       actualRole === "seller"
     ) {
 
-      localStorage.setItem(
-        "maxstoreSession",
-        JSON.stringify(user)
+      showSuccess(
+        "Seller login successful. Opening dashboard..."
       );
 
-      window.location.href =
-        "/seller/dashboard.html";
+      setTimeout(
+        function () {
+
+          window.location.href =
+            "/seller/dashboard.html";
+
+        },
+        500
+      );
 
       return;
 
     }
 
 
-
-    /* BUYER + SELLER */
+    /* =================================================
+       BUYER + SELLER
+    ================================================= */
 
     if (
       actualRole === "buyer_seller"
     ) {
 
-      localStorage.setItem(
-        "maxstoreSession",
-        JSON.stringify(user)
+      showSuccess(
+        "Login successful. Opening seller dashboard..."
       );
 
-      window.location.href =
-        "/seller/dashboard.html";
+      setTimeout(
+        function () {
+
+          window.location.href =
+            "/seller/dashboard.html";
+
+        },
+        500
+      );
 
       return;
 
     }
 
 
-
-    /* BUYER */
+    /* =================================================
+       BUYER
+    ================================================= */
 
     if (
       actualRole === "buyer"
     ) {
 
-      localStorage.setItem(
-        "maxstoreSession",
-        JSON.stringify(user)
+      showSuccess(
+        "Login successful. Opening MAX STORE..."
       );
 
-      window.location.href =
-        "/index.html";
+      setTimeout(
+        function () {
+
+          window.location.href =
+            "/index.html";
+
+        },
+        500
+      );
 
       return;
 
     }
 
 
-
-    /* UNKNOWN ROLE */
-
     throw new Error(
-      "Account role is not recognized."
+      "Unknown account role: " +
+      actualRole
     );
 
 
   } catch (error) {
 
-
     console.error(
-      "MAX STORE Login Error:",
+      "MAX STORE LOGIN ERROR:",
       error
     );
 
 
     showError(
       error.message ||
-      "Invalid email or password"
+      "Login failed."
     );
 
 
-    loginBtn.disabled =
-      false;
+    loginBtn.disabled = false;
 
     loginBtn.textContent =
       "Login";
@@ -600,18 +650,41 @@ async function login() {
 }
 
 
-
-/* ==========================================
+/* =====================================================
    ERROR
-========================================== */
+===================================================== */
 
 function showError(message) {
 
-  msg.className =
-    "error";
+  msg.className = "error";
 
-  msg.textContent =
-    message;
+  msg.textContent = message;
+
+}
+
+
+/* =====================================================
+   SUCCESS
+===================================================== */
+
+function showSuccess(message) {
+
+  msg.className = "success";
+
+  msg.textContent = message;
+
+}
+
+
+/* =====================================================
+   CLEAR
+===================================================== */
+
+function clearMessage() {
+
+  msg.className = "";
+
+  msg.textContent = "";
 
 }
 
