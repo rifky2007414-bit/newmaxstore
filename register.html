@@ -573,24 +573,59 @@ async function registerAccount() {
        SEND TO GOOGLE APPS SCRIPT
     ============================== */
 
-    const result = await api(
-      "register",
-      {
+    const API_URL =
+  "https://script.google.com/macros/s/AKfycbwe_fBlSg8zIkNhCAyMfCI9r_fmnzLoKdALH-rYJd_2BO-lrLgV6h-J7ZgoGdLt2swp3Q/exec";
 
-        name: name,
 
-        email: email,
+const response = await fetch(API_URL, {
 
-        phone: phone,
+  method: "POST",
 
-        password: password,
+  headers: {
+    "Content-Type": "text/plain;charset=utf-8"
+  },
 
-        role: accountRole,
+  body: JSON.stringify({
 
-        storeName: storeName
+    action: "register",
 
-      }
-    );
+    name: name,
+
+    email: email,
+
+    phone: phone,
+
+    password: password,
+
+    role: accountRole,
+
+    storeName: storeName
+
+  })
+
+});
+
+
+const result = await response.json();
+
+
+console.log(
+  "MAX STORE registration:",
+  result
+);
+
+
+if (
+  !result ||
+  result.success !== true
+) {
+
+  throw new Error(
+    result?.message ||
+    "Registration failed."
+  );
+
+}
 
 
     console.log(
