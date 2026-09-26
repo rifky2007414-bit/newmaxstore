@@ -1,1 +1,622 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Login</title><link rel="stylesheet" href="/css/style.css"></head><body><nav class="nav"><div class="navin"><a class="logo" href="/index.html">MAX <span>STORE</span></a><div class="navlinks"><a href="/index.html">Home</a><a href="/products.html">Products</a><a href="/products.html?category=Fashion">Fashion</a><a href="/products.html?category=Electronics">Electronics</a><a href="/products.html?category=Photo%20%26%20Camera">Photo & Camera</a></div><a href="/cart.html" class="btn">Cart <span id="cartCount">0</span></a><a href="/login.html" class="btn primary">Login</a></div></nav><main class="container"><div class="form panel"><h1>Login</h1><div class=field><label>Login as</label><select id=role><option value=buyer>Buyer</option><option value=seller>Seller</option></select></div><div class=field><label>Email</label><input class=input id=email></div><div class=field><label>Password</label><input class=input id=password type=password></div><button class="btn primary" onclick=go()>Login</button><p id=msg></p><p class=muted>New user? <a href=/register.html>Register</a></p></div></main><script src=/js/app.js></script><script>async function go(){try{let j=await api("login",{email:email.value,password:password.value,loginRole:role.value});saveSession(j.user);location.href=j.user.role==="admin"?"/admin/dashboard.html":j.user.role==="seller"?"/seller/dashboard.html":"/buyer/dashboard.html"}catch(e){msg.className="error";msg.textContent=e.message}}</script></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Login — MAX STORE</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+
+  <style>
+
+    .login-box {
+      max-width: 520px;
+      margin: 60px auto;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 7px;
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      width: 100%;
+      box-sizing: border-box;
+      padding-right: 80px;
+    }
+
+    .show-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: #00d4ff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .success {
+      color: #22c55e;
+      margin-top: 15px;
+    }
+
+    .error {
+      color: #ef4444;
+      margin-top: 15px;
+    }
+
+    .muted {
+      color: #a6a8b3;
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+<nav class="nav">
+
+  <div class="navin">
+
+    <a class="logo" href="/index.html">
+      MAX <span>STORE</span>
+    </a>
+
+    <div class="navlinks">
+
+      <a href="/index.html">
+        Home
+      </a>
+
+      <a href="/products.html">
+        Products
+      </a>
+
+      <a href="/products.html?category=Fashion">
+        Fashion
+      </a>
+
+      <a href="/products.html?category=Electronics">
+        Electronics
+      </a>
+
+      <a href="/products.html?category=Photo%20%26%20Camera">
+        Photo & Camera
+      </a>
+
+    </div>
+
+    <a href="/cart.html" class="btn">
+      Cart
+    </a>
+
+    <a href="/register.html" class="btn primary">
+      Register
+    </a>
+
+  </div>
+
+</nav>
+
+
+
+<main class="container">
+
+
+  <div class="form panel login-box">
+
+
+    <h1>
+      Login
+    </h1>
+
+
+    <p class="muted">
+      Login to your MAX STORE account.
+    </p>
+
+
+    <!-- ACCOUNT TYPE -->
+
+    <div class="field">
+
+      <label for="role">
+        Login as
+      </label>
+
+      <select
+        id="role"
+        class="input"
+      >
+
+        <option value="buyer">
+          Buyer
+        </option>
+
+        <option value="seller">
+          Seller
+        </option>
+
+        <option value="buyer_seller">
+          Buyer & Seller
+        </option>
+
+        <option value="admin">
+          Admin
+        </option>
+
+      </select>
+
+    </div>
+
+
+
+    <!-- EMAIL -->
+
+    <div class="field">
+
+      <label for="email">
+        Email
+      </label>
+
+      <input
+        id="email"
+        class="input"
+        type="email"
+        autocomplete="email"
+        placeholder="Enter your email"
+      >
+
+    </div>
+
+
+
+    <!-- PASSWORD -->
+
+    <div class="field">
+
+      <label for="password">
+        Password
+      </label>
+
+      <div class="password-wrap">
+
+        <input
+          id="password"
+          class="input"
+          type="password"
+          autocomplete="current-password"
+          placeholder="Enter your password"
+        >
+
+        <button
+          type="button"
+          class="show-password"
+          id="showPassword"
+        >
+          Show
+        </button>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- LOGIN BUTTON -->
+
+    <button
+      type="button"
+      class="btn primary"
+      id="loginBtn"
+    >
+      Login
+    </button>
+
+
+
+    <!-- MESSAGE -->
+
+    <p id="msg"></p>
+
+
+
+    <p class="muted">
+
+      New user?
+
+      <a href="/register.html">
+        Register
+      </a>
+
+    </p>
+
+
+  </div>
+
+
+</main>
+
+
+
+<script>
+
+
+/* ==========================================
+   MAX STORE GOOGLE APPS SCRIPT API
+========================================== */
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbwe_fBlSg8zIkNhCAyMfCI9r_fmnzLoKdALH-rYJd_2BO-lrLgV6h-J7ZgoGdLt2swp3Q/exec";
+
+
+
+/* ==========================================
+   ELEMENTS
+========================================== */
+
+const roleInput =
+document.getElementById("role");
+
+const emailInput =
+document.getElementById("email");
+
+const passwordInput =
+document.getElementById("password");
+
+const loginBtn =
+document.getElementById("loginBtn");
+
+const msg =
+document.getElementById("msg");
+
+const showPassword =
+document.getElementById("showPassword");
+
+
+
+/* ==========================================
+   SHOW / HIDE PASSWORD
+========================================== */
+
+showPassword.addEventListener(
+  "click",
+  function() {
+
+    if (
+      passwordInput.type === "password"
+    ) {
+
+      passwordInput.type = "text";
+
+      showPassword.textContent =
+        "Hide";
+
+    } else {
+
+      passwordInput.type =
+        "password";
+
+      showPassword.textContent =
+        "Show";
+
+    }
+
+  }
+);
+
+
+
+/* ==========================================
+   LOGIN BUTTON
+========================================== */
+
+loginBtn.addEventListener(
+  "click",
+  login
+);
+
+
+
+/* ==========================================
+   LOGIN FUNCTION
+========================================== */
+
+async function login() {
+
+
+  msg.textContent = "";
+
+  msg.className = "";
+
+
+  const email =
+    emailInput.value.trim().toLowerCase();
+
+  const password =
+    passwordInput.value;
+
+  const selectedRole =
+    roleInput.value;
+
+
+
+  /* ========================================
+     VALIDATION
+  ======================================== */
+
+  if (!email) {
+
+    showError(
+      "Please enter your email."
+    );
+
+    return;
+
+  }
+
+
+  if (!password) {
+
+    showError(
+      "Please enter your password."
+    );
+
+    return;
+
+  }
+
+
+
+  /* ========================================
+     BUTTON
+  ======================================== */
+
+  loginBtn.disabled = true;
+
+  loginBtn.textContent =
+    "Logging in...";
+
+
+
+  try {
+
+
+    /* ======================================
+       SEND LOGIN REQUEST
+    ====================================== */
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "text/plain;charset=utf-8"
+          },
+
+          body: JSON.stringify({
+
+            action: "login",
+
+            email: email,
+
+            password: password
+
+          })
+
+        }
+      );
+
+
+
+    const result =
+      await response.json();
+
+
+
+    console.log(
+      "MAX STORE LOGIN:",
+      result
+    );
+
+
+
+    /* ======================================
+       LOGIN FAILED
+    ====================================== */
+
+    if (
+      !result ||
+      result.success !== true
+    ) {
+
+      throw new Error(
+        result?.message ||
+        "Invalid email or password"
+      );
+
+    }
+
+
+
+    /* ======================================
+       USER DATA
+    ====================================== */
+
+    const user =
+      result.user;
+
+
+
+    if (!user) {
+
+      throw new Error(
+        "User data was not returned."
+      );
+
+    }
+
+
+
+    /* ======================================
+       ROLE CHECK
+    ====================================== */
+
+    const actualRole =
+      String(
+        user.role || ""
+      ).toLowerCase();
+
+
+
+    /* ADMIN */
+
+    if (
+      actualRole === "admin"
+    ) {
+
+      localStorage.setItem(
+        "maxstoreSession",
+        JSON.stringify(user)
+      );
+
+      window.location.href =
+        "/admin/dashboard.html";
+
+      return;
+
+    }
+
+
+
+    /* SELLER */
+
+    if (
+      actualRole === "seller"
+    ) {
+
+      localStorage.setItem(
+        "maxstoreSession",
+        JSON.stringify(user)
+      );
+
+      window.location.href =
+        "/seller/dashboard.html";
+
+      return;
+
+    }
+
+
+
+    /* BUYER + SELLER */
+
+    if (
+      actualRole === "buyer_seller"
+    ) {
+
+      localStorage.setItem(
+        "maxstoreSession",
+        JSON.stringify(user)
+      );
+
+      window.location.href =
+        "/seller/dashboard.html";
+
+      return;
+
+    }
+
+
+
+    /* BUYER */
+
+    if (
+      actualRole === "buyer"
+    ) {
+
+      localStorage.setItem(
+        "maxstoreSession",
+        JSON.stringify(user)
+      );
+
+      window.location.href =
+        "/index.html";
+
+      return;
+
+    }
+
+
+
+    /* UNKNOWN ROLE */
+
+    throw new Error(
+      "Account role is not recognized."
+    );
+
+
+  } catch (error) {
+
+
+    console.error(
+      "MAX STORE Login Error:",
+      error
+    );
+
+
+    showError(
+      error.message ||
+      "Invalid email or password"
+    );
+
+
+    loginBtn.disabled =
+      false;
+
+    loginBtn.textContent =
+      "Login";
+
+  }
+
+}
+
+
+
+/* ==========================================
+   ERROR
+========================================== */
+
+function showError(message) {
+
+  msg.className =
+    "error";
+
+  msg.textContent =
+    message;
+
+}
+
+</script>
+
+
+</body>
+</html>
