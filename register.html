@@ -1,1 +1,507 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Register</title><link rel="stylesheet" href="/css/style.css"></head><body><nav class="nav"><div class="navin"><a class="logo" href="/index.html">MAX <span>STORE</span></a><div class="navlinks"><a href="/index.html">Home</a><a href="/products.html">Products</a><a href="/products.html?category=Fashion">Fashion</a><a href="/products.html?category=Electronics">Electronics</a><a href="/products.html?category=Photo%20%26%20Camera">Photo & Camera</a></div><a href="/cart.html" class="btn">Cart <span id="cartCount">0</span></a><a href="/login.html" class="btn primary">Login</a></div></nav><main class="container"><div class="form panel"><h1>Create Account</h1><div class=field><label>Account type</label><select id=role><option value=buyer>Buyer</option><option value=seller>Seller</option><option value=both>Buyer & Seller</option></select></div><div class=field><label>Name</label><input class=input id=name></div><div class=field><label>Email</label><input class=input id=email type=email></div><div class=field><label>Phone</label><input class=input id=phone></div><div class=field><label>Store name (seller)</label><input class=input id=store></div><div class=field><label>Password</label><input class=input id=password type=password></div><button class="btn primary" onclick=reg()>Create Account</button><p id=msg></p></div></main><script src=/js/app.js></script><script>async function reg(){try{await api("register",{name:name.value,email:email.value,phone:phone.value,storeName:store.value,password:password.value,role:role.value});msg.className="success";msg.textContent="Account created. Login now.";setTimeout(()=>location.href="/login.html",700)}catch(e){msg.className="error";msg.textContent=e.message}}</script></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Register — MAX STORE</title>
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<nav class="nav">
+  <div class="navin">
+
+    <a class="logo" href="/index.html">
+      MAX <span>STORE</span>
+    </a>
+
+    <div class="navlinks">
+      <a href="/index.html">Home</a>
+      <a href="/products.html">Products</a>
+      <a href="/products.html?category=Fashion">Fashion</a>
+      <a href="/products.html?category=Electronics">Electronics</a>
+      <a href="/products.html?category=Photo%20%26%20Camera">
+        Photo & Camera
+      </a>
+    </div>
+
+    <a href="/cart.html" class="btn">
+      Cart <span id="cartCount">0</span>
+    </a>
+
+    <a href="/login.html" class="btn primary">
+      Login
+    </a>
+
+  </div>
+</nav>
+
+
+<main class="container">
+
+  <div class="form panel">
+
+    <h1>Create Account</h1>
+
+    <p class="muted">
+      Join MAX STORE as a buyer or seller.
+    </p>
+
+
+    <!-- ACCOUNT TYPE -->
+
+    <div class="field">
+
+      <label for="role">
+        Account Type
+      </label>
+
+      <select id="role" class="input">
+
+        <option value="buyer">
+          Buyer
+        </option>
+
+        <option value="seller">
+          Seller
+        </option>
+
+        <option value="buyer_seller">
+          Buyer & Seller
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- NAME -->
+
+    <div class="field">
+
+      <label for="name">
+        Full Name
+      </label>
+
+      <input
+        class="input"
+        id="name"
+        type="text"
+        placeholder="Enter your name"
+        required
+      >
+
+    </div>
+
+
+    <!-- EMAIL -->
+
+    <div class="field">
+
+      <label for="email">
+        Email
+      </label>
+
+      <input
+        class="input"
+        id="email"
+        type="email"
+        placeholder="Enter your email"
+        required
+      >
+
+    </div>
+
+
+    <!-- PHONE -->
+
+    <div class="field">
+
+      <label for="phone">
+        Phone
+      </label>
+
+      <input
+        class="input"
+        id="phone"
+        type="tel"
+        placeholder="07XXXXXXXX"
+        required
+      >
+
+    </div>
+
+
+    <!-- STORE -->
+
+    <div
+      class="field"
+      id="storeField"
+    >
+
+      <label for="store">
+        Store Name
+      </label>
+
+      <input
+        class="input"
+        id="store"
+        type="text"
+        placeholder="Enter your store name"
+      >
+
+      <small class="muted">
+        Required for Seller / Buyer & Seller accounts.
+      </small>
+
+    </div>
+
+
+    <!-- PASSWORD -->
+
+    <div class="field">
+
+      <label for="password">
+        Password
+      </label>
+
+      <input
+        class="input"
+        id="password"
+        type="password"
+        placeholder="Create a password"
+        required
+      >
+
+    </div>
+
+
+    <!-- CONFIRM PASSWORD -->
+
+    <div class="field">
+
+      <label for="confirmPassword">
+        Confirm Password
+      </label>
+
+      <input
+        class="input"
+        id="confirmPassword"
+        type="password"
+        placeholder="Confirm your password"
+        required
+      >
+
+    </div>
+
+
+    <!-- BUTTON -->
+
+    <button
+      class="btn primary"
+      id="registerBtn"
+      type="button"
+    >
+      Create Account
+    </button>
+
+
+    <!-- MESSAGE -->
+
+    <p id="msg"></p>
+
+
+    <p class="muted">
+
+      Already have an account?
+
+      <a href="/login.html">
+        Login
+      </a>
+
+    </p>
+
+  </div>
+
+</main>
+
+
+<script src="/js/app.js"></script>
+
+
+<script>
+
+const roleInput =
+  document.getElementById("role");
+
+const storeField =
+  document.getElementById("storeField");
+
+const storeInput =
+  document.getElementById("store");
+
+const nameInput =
+  document.getElementById("name");
+
+const emailInput =
+  document.getElementById("email");
+
+const phoneInput =
+  document.getElementById("phone");
+
+const passwordInput =
+  document.getElementById("password");
+
+const confirmPasswordInput =
+  document.getElementById("confirmPassword");
+
+const registerBtn =
+  document.getElementById("registerBtn");
+
+const msg =
+  document.getElementById("msg");
+
+
+/* ==========================================
+   SHOW / HIDE STORE FIELD
+========================================== */
+
+function updateStoreField() {
+
+  if (roleInput.value === "buyer") {
+
+    storeField.style.display = "none";
+
+    storeInput.value = "";
+
+  } else {
+
+    storeField.style.display = "block";
+
+  }
+
+}
+
+
+roleInput.addEventListener(
+  "change",
+  updateStoreField
+);
+
+updateStoreField();
+
+
+/* ==========================================
+   REGISTER
+========================================== */
+
+registerBtn.addEventListener(
+  "click",
+  async function () {
+
+    msg.textContent = "";
+    msg.className = "";
+
+    const name =
+      nameInput.value.trim();
+
+    const email =
+      emailInput.value.trim();
+
+    const phone =
+      phoneInput.value.trim();
+
+    const password =
+      passwordInput.value;
+
+    const confirmPassword =
+      confirmPasswordInput.value;
+
+    const role =
+      roleInput.value;
+
+    const storeName =
+      storeInput.value.trim();
+
+
+    /* VALIDATION */
+
+    if (!name) {
+
+      showError("Please enter your name.");
+
+      return;
+
+    }
+
+
+    if (!email) {
+
+      showError("Please enter your email.");
+
+      return;
+
+    }
+
+
+    if (!phone) {
+
+      showError("Please enter your phone number.");
+
+      return;
+
+    }
+
+
+    if (!password) {
+
+      showError("Please enter a password.");
+
+      return;
+
+    }
+
+
+    if (password.length < 6) {
+
+      showError(
+        "Password must be at least 6 characters."
+      );
+
+      return;
+
+    }
+
+
+    if (password !== confirmPassword) {
+
+      showError(
+        "Passwords do not match."
+      );
+
+      return;
+
+    }
+
+
+    /* SELLER VALIDATION */
+
+    if (
+      role === "seller" ||
+      role === "buyer_seller"
+    ) {
+
+      if (!storeName) {
+
+        showError(
+          "Please enter your store name."
+        );
+
+        return;
+
+      }
+
+    }
+
+
+    /* BUTTON */
+
+    registerBtn.disabled = true;
+
+    registerBtn.textContent =
+      "Creating Account...";
+
+
+    try {
+
+      const result = await api(
+        "register",
+        {
+
+          name: name,
+
+          email: email,
+
+          phone: phone,
+
+          password: password,
+
+          role: role,
+
+          storeName: storeName
+
+        }
+      );
+
+
+      if (
+        !result ||
+        result.success !== true
+      ) {
+
+        throw new Error(
+          result?.message ||
+          "Registration failed."
+        );
+
+      }
+
+
+      msg.className =
+        "success";
+
+      msg.textContent =
+        "Account created successfully! Redirecting to login...";
+
+
+      setTimeout(
+        function () {
+
+          window.location.href =
+            "/login.html";
+
+        },
+        1200
+      );
+
+
+    } catch (error) {
+
+      showError(
+        error.message ||
+        "Something went wrong."
+      );
+
+      registerBtn.disabled = false;
+
+      registerBtn.textContent =
+        "Create Account";
+
+    }
+
+  }
+);
+
+
+/* ==========================================
+   ERROR
+========================================== */
+
+function showError(message) {
+
+  msg.className =
+    "error";
+
+  msg.textContent =
+    message;
+
+}
+
+</script>
+
+</body>
+</html>
